@@ -20,49 +20,19 @@ let construct l =
 (* Problem 1: Tree In-order Fold  *)
 (**********************************)
 
-let f acc x = acc @ [x] ;;
-let f acc x = acc + x ;;
-
 let rec fold_inorder f acc tree =
-  let t left mid right = f (f (f acc left) mid) right in
-  let left = match tree with
-  | Leaf -> acc
-  | Node(l,y,r) -> t (fold_inorder f acc l) y (fold_inorder f acc r) in
-  left;;
-
-
-let getNode node =
-  match node with
-  | Leaf -> Leaf
-  | Node(l,m,r) -> Node(Leaf,m,Leaf)
-
-let rec fold_inorder f acc tree =
-  let left = match tree with
-  | Leaf -> acc
-  | Node(l,y,r) -> if r=Leaf then f (fold_inorder f acc l) y
-  else f (fold_inorder f (f (fold_inorder f acc l) y) r) y in
-  left;;
-
-
-let rec order acc tree =
-  match tree with
-  | Leaf -> acc
-  | Node(l,y,r) -> (fold_inorder f acc l) @ [y] @ (fold_inorder f acc r)
-
-
-
-  assert ( fold_inorder (fun acc x -> acc @ [x]) [] (Node (Node (Leaf,1,Leaf), 2, Node (Leaf,3,Leaf))) = [1;2;3] )
-  assert ( fold_inorder (fun acc x -> acc + x) 0 (Node (Node (Leaf,1,Leaf), 2, Node (Leaf,3,Leaf))) = 6 )
-  assert ( fold_inorder (fun acc x -> acc @ [x]) [] (Node (Node (Node(Node (Leaf,6,Leaf),5,Node (Leaf,4,Leaf)),1,Leaf), 2, Node(Leaf,3,Leaf))) = 21 )
-
-
-    let right = match tree with
+  let rec order acc tree =
+    match tree with
     | Leaf -> acc
-    | Node(l,y,r) -> (fold_inorder f (f acc y) r) in (*folding left*)
+    | Node(l,y,r) -> (fold_inorder f acc l) @ [y] @ (fold_inorder f acc r) in
 
-    let left = match tree with
-    | Leaf -> acc
-    | Node(l,y,r) -> if r=Leaf then f (fold_inorder f acc l) y (*folding right*)
+  let rec fold f acc ordered =
+    match ordered with
+    | [] -> acc
+    | (h::t) -> fold f (f acc h) t in
+
+  fold f acc (order [] tree) ;;
+  
 
 (*****************************************)
 (* Problem 2: Tree Level-order Traversal *)
