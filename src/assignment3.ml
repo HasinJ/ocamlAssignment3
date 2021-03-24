@@ -20,6 +20,7 @@ let construct l =
 (* Problem 1: Tree In-order Fold  *)
 (**********************************)
 
+<<<<<<< HEAD
 (*
 extra asserts:
 assert ( fold_inorder (fun acc x -> acc @ [x]) [] (Node (Node (Node(Node (Leaf,6,Leaf),5,Node (Leaf,4,Leaf)),1,Leaf), 2, Node(Leaf,3,Leaf))) = [6;5;4;1;2;3] )
@@ -27,6 +28,8 @@ assert ( fold_inorder (fun acc x -> acc @ [x]) [] (Node (Node (Node(Node (Leaf,6
 *)
 
 
+=======
+>>>>>>> dccf2bae122f6b94c47d0ed65dc246b15c9273a8
 let rec fold_inorder f acc tree =
   let rec order acc tree =
     match tree with
@@ -39,7 +42,11 @@ let rec fold_inorder f acc tree =
     | (h::t) -> fold f (f acc h) t in
 
   fold f acc (order [] tree) ;;
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> dccf2bae122f6b94c47d0ed65dc246b15c9273a8
 
 (*****************************************)
 (* Problem 2: Tree Level-order Traversal *)
