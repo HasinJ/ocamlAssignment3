@@ -20,21 +20,18 @@ let construct l =
 (* Problem 1: Tree In-order Fold  *)
 (**********************************)
 
-<<<<<<< HEAD
 (*
 extra asserts:
 assert ( fold_inorder (fun acc x -> acc @ [x]) [] (Node (Node (Node(Node (Leaf,6,Leaf),5,Node (Leaf,4,Leaf)),1,Leaf), 2, Node(Leaf,3,Leaf))) = [6;5;4;1;2;3] )
-assert ( fold_inorder (fun acc x -> acc @ [x]) [] (Node (Node (Node(Node (Leaf,6,Leaf),5,Node (Leaf,4,Leaf)),1,Leaf), 2, Node(Leaf,3,Leaf))) = 21 )
+assert ( fold_inorder (fun acc x -> acc + x) 0 (Node (Node (Node(Node (Leaf,6,Leaf),5,Node (Leaf,4,Leaf)),1,Leaf), 2, Node(Leaf,3,Leaf))) = 21 )
 *)
 
 
-=======
->>>>>>> dccf2bae122f6b94c47d0ed65dc246b15c9273a8
 let rec fold_inorder f acc tree =
   let rec order acc tree =
     match tree with
     | Leaf -> acc
-    | Node(l,y,r) -> (fold_inorder f acc l) @ [y] @ (fold_inorder f acc r) in
+    | Node(l,y,r) -> (order acc l) @ [y] @ (order acc r) in
 
   let rec fold f acc ordered =
     match ordered with
@@ -42,18 +39,50 @@ let rec fold_inorder f acc tree =
     | (h::t) -> fold f (f acc h) t in
 
   fold f acc (order [] tree) ;;
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> dccf2bae122f6b94c47d0ed65dc246b15c9273a8
 
 (*****************************************)
 (* Problem 2: Tree Level-order Traversal *)
 (*****************************************)
 
+(*
+extra asserts:
+levelOrder Node (Node (Node (Node (Leaf, 6, Leaf), 5, Node (Leaf, 4, Leaf)), 1, Leaf), 2, Node (Leaf, 3, Leaf)) ;;
+- : int list list = [[2]; [1; 3]; [5]; [6; 4]]
+*)
+
 let levelOrder t =
-  []
+
+  let rec finding_level tree =
+    let left = match tree with
+    | Leaf -> 0
+    | Node(l,y,r) -> 1 + (finding_level l) in
+
+    let right = match tree with
+    | Leaf -> 0
+    | Node(l,y,r) -> 1 + (finding_level r) in
+
+    if left>right then left else right in
+
+  let rec return_level level tree acc counter =
+    match tree with
+    | Leaf -> acc
+    | Node(l,m,r) ->
+      if counter=level then m::acc else return_level level l (return_level level r acc (counter + 1)) (counter + 1) in
+
+  let rec all_levels tree curr maxlvl acc =
+    match tree with
+    | Leaf -> acc
+    | Node(l,m,r) ->
+      if curr=maxlvl then return_level (curr) tree [] 1::acc
+      else all_levels tree (curr+1) maxlvl (return_level (curr) tree [] 1::acc) in
+
+  let rec reverse l a =
+    match l with
+    | [] -> a
+    | (h::t) -> reverse t (h::a) in
+
+  reverse (all_levels t 1 (finding_level t) []) [];;
 
 
 
