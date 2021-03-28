@@ -55,16 +55,14 @@ Node(Node(Leaf,1,Leaf),2,Node(Node(Leaf,3,Leaf),4,Leaf))
 
 let levelOrder t =
 
-  let rec finding_level tree =
-    let rec left tree = match tree with
-    | Leaf -> 0
-    | Node(l,y,r) -> 1 + (left l) in
-
-    let rec right tree = match tree with
-    | Leaf -> 0
-    | Node(l,y,r) -> 1 + (right r) in
-
-    if (left tree)>(right tree) then (left tree) else (right tree) in
+  let finding_level t =
+    let rec aux acc treelist =
+      match treelist with
+      | [] -> acc
+      | (h::t) -> match h with
+        | Leaf -> aux acc t
+        | Node(l,m,r) -> aux (acc+1) (t @ [l] @ [r]) in
+    aux 0 [t] in
 
   let rec return_level level tree acc counter =
     match tree with
@@ -82,7 +80,7 @@ let levelOrder t =
   let rec reverse l a =
     match l with
     | [] -> a
-    | (h::t) -> reverse t (h::a) in
+    | (h::t) -> if h=[] then reverse t a else reverse t (h::a) in
 
   reverse (all_levels t 1 (finding_level t) []) [];;
 
