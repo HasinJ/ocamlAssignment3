@@ -49,20 +49,22 @@ let rec fold_inorder f acc tree =
 extra asserts:
 levelOrder Node (Node (Node (Node (Leaf, 6, Leaf), 5, Node (Leaf, 4, Leaf)), 1, Leaf), 2, Node (Leaf, 3, Leaf)) ;;
 - : int list list = [[2]; [1; 3]; [5]; [6; 4]]
+
+Node(Node(Leaf,1,Leaf),2,Node(Node(Leaf,3,Leaf),4,Leaf))
 *)
 
 let levelOrder t =
 
   let rec finding_level tree =
-    let left = match tree with
+    let rec left tree = match tree with
     | Leaf -> 0
-    | Node(l,y,r) -> 1 + (finding_level l) in
+    | Node(l,y,r) -> 1 + (left l) in
 
-    let right = match tree with
+    let rec right tree = match tree with
     | Leaf -> 0
-    | Node(l,y,r) -> 1 + (finding_level r) in
+    | Node(l,y,r) -> 1 + (right r) in
 
-    if left>right then left else right in
+    if (left tree)>(right tree) then (left tree) else (right tree) in
 
   let rec return_level level tree acc counter =
     match tree with
@@ -74,8 +76,8 @@ let levelOrder t =
     match tree with
     | Leaf -> acc
     | Node(l,m,r) ->
-      if curr=maxlvl then return_level (curr) tree [] 1::acc
-      else all_levels tree (curr+1) maxlvl (return_level (curr) tree [] 1::acc) in
+      if curr=maxlvl then (return_level (curr) tree [] 1)::acc
+      else all_levels tree (curr+1) maxlvl ((return_level (curr) tree [] 1)::acc) in
 
   let rec reverse l a =
     match l with
@@ -95,7 +97,15 @@ let rec sum_tree t =
   | Leaf -> 0
   | Node (l, x, r) -> sum_tree l + x + sum_tree r
 
-let sumtailrec t = 0
+let sumtailrec t =
+  let rec aux acc treelist =
+    match treelist with
+    | [] -> acc
+    | (h::t) -> match h with
+      | Leaf -> aux acc t
+      | Node(l,m,r) -> aux (acc+m) (t @ [l] @ [r]) in
+  aux 0 [t];;
+
 
 (******************************)
 (* Problem 4: Imp Interperter *)
